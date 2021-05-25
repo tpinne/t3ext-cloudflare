@@ -15,6 +15,7 @@ namespace Causal\Cloudflare\Controller;
  */
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -98,6 +99,12 @@ class DashboardController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContro
     {
         if (empty($zone)) {
             $this->returnAjax(null);
+        }
+
+        // Require 3rd-party libraries, in case TYPO3 does not run in composer mode
+        $autoloadFileName = ExtensionManagementUtility::extPath('cloudflare') . 'Libraries/vendor/autoload.php';
+        if (is_file($autoloadFileName)) {
+            include $autoloadFileName;
         }
 
         $availablePeriods = $this->getAvailablePeriods($zone);

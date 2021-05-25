@@ -29,7 +29,8 @@
   "require": {
     "php": ">= 7.2.0, <= 7.4.99",
     "ext-curl": "*",
-    "typo3/cms-core": "^9.5 || ^10.4"
+    "typo3/cms-core": "^9.5 || ^10.4",
+    "gmostafa/php-graphql-client": "^1.10"
   },
   "autoload": {
     "psr-4": {
@@ -47,5 +48,22 @@
     "typo3/cms": {
       "extension-key": "cloudflare"
     }
+  },
+  "scripts": {
+    "extension-create-libs": [
+      "mkdir -p Libraries",
+      "if [ ! -d Libraries/vendor/gmostafa ]; then cd Libraries && composer init -n --name=causal/cloudflare-libs && composer require gmostafa/php-graphql-client=^1.10 && composer config classmap-authoritative true && composer config prepend-autoloader false && composer dump-autoload; fi"
+    ],
+    "extension-build": [
+      "@extension-create-libs"
+    ],
+    "extension-release": [
+      "@extension-build",
+      "rm -rf .github",
+      "rm .gitignore"
+    ],
+    "extension-clean": [
+      "rm -rf Libraries"
+    ]
   }
 }
